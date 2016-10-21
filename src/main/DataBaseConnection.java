@@ -26,7 +26,7 @@ public class DataBaseConnection {
 	Connection connection = null;
 	try {
             connection = DriverManager
-            .getConnection("jdbc:mysql://localhost:3306/seguridad","root", "lintux_tl1");
+            .getConnection("jdbc:mysql://localhost:3306/seguridad","root", "root");
 
 	} catch (SQLException e) {
             System.out.println("Connection Failed! Check output console");
