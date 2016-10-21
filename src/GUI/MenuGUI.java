@@ -146,7 +146,7 @@ public class MenuGUI extends javax.swing.JFrame {
         int result = chooser.showSaveDialog(null);
         switch (result) {
         case JFileChooser.APPROVE_OPTION:
-            String filename = chooser.getSelectedFile().getAbsolutePath() + ".cip";
+            String filename = chooser.getSelectedFile().getAbsolutePath();
             FileOutputStream fos;
             try{
              fos = new FileOutputStream(filename);
