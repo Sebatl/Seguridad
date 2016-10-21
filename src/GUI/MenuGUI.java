@@ -1,10 +1,16 @@
 package GUI;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import main.Decryptor;
+
 public class MenuGUI extends javax.swing.JFrame {
 
-    FileLoaderGUI fileSelector;
+   
     public MenuGUI() {
         initComponents();
-        fileSelector = new FileLoaderGUI();
     }
 
     /**
@@ -76,9 +82,26 @@ public class MenuGUI extends javax.swing.JFrame {
 
     //Encriptar
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        fileSelector.setMode(FileLoaderGUI.ENCRYPT_MODE);
-        fileSelector.setMenu(this);
-        fileSelector.setVisible(true);
+        JFileChooser chooser = new JFileChooser();
+        chooser.setDialogTitle("Seleccionar archivo a encriptar");
+        int result = chooser.showOpenDialog(null);
+        switch (result) {
+        case JFileChooser.APPROVE_OPTION:
+            EncryptGUI encrypt = new EncryptGUI();
+            File file = chooser.getSelectedFile();
+            encrypt.setFile(file);
+            encrypt.setMenu(this);
+            encrypt.setVisible(true);
+            this.setVisible(false);
+          break;
+        case JFileChooser.CANCEL_OPTION:
+          System.out.println("Cancel or the close-dialog icon was clicked");
+          break;
+        case JFileChooser.ERROR_OPTION:
+          System.out.println("Error");
+          break;
+        }
+        
     }//GEN-LAST:event_jButton1ActionPerformed
 
     //Firmar
@@ -88,11 +111,59 @@ public class MenuGUI extends javax.swing.JFrame {
 
     //Desencriptar
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-         fileSelector.setMode(FileLoaderGUI.DECRYPT_MODE);
-        fileSelector.setMenu(this);
-        fileSelector.setVisible(true);
+        JFileChooser chooser = new JFileChooser();
+        chooser.setDialogTitle("Seleccionar archivo a desencriptar");
+        int result = chooser.showOpenDialog(null);
+        switch (result) {
+        case JFileChooser.APPROVE_OPTION:
+            File file = chooser.getSelectedFile();
+            if(file.getName().contains(".cip")){
+                byte[] decFile = Decryptor.decrypt(file);
+                
+                if(decFile != null){
+                    decryptTo(decFile);
+                }
+                
+            }else{
+                JOptionPane.showMessageDialog(this,
+                "Archivo inválido",
+                 "Error",
+                 JOptionPane.ERROR_MESSAGE);
+            }
+          break;
+        case JFileChooser.CANCEL_OPTION:
+          System.out.println("Cancel or the close-dialog icon was clicked");
+          break;
+        case JFileChooser.ERROR_OPTION:
+          System.out.println("Error");
+          break;
+        }
     }//GEN-LAST:event_jButton3ActionPerformed
 
+    private void decryptTo(byte[] decFile){
+        JFileChooser chooser = new JFileChooser();
+        chooser.setDialogTitle("Guardar");
+        int result = chooser.showSaveDialog(null);
+        switch (result) {
+        case JFileChooser.APPROVE_OPTION:
+            String filename = chooser.getSelectedFile().getAbsolutePath() + ".cip";
+            FileOutputStream fos;
+            try{
+             fos = new FileOutputStream(filename);
+                fos.write(decFile);
+                fos.close();
+                System.out.println("FINISHED");
+
+                JOptionPane.showMessageDialog(this,
+                "Operación finalizada",
+                 "Descifrar",
+                 JOptionPane.INFORMATION_MESSAGE);
+            }catch(Exception e){
+                
+            }
+        }
+    }
+    
     /**
      * @param args the command line arguments
      */

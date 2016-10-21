@@ -16,7 +16,7 @@ import javax.crypto.SecretKey;
 
 public class Encryptor {
  
-    public static byte[] encrypt(File file){
+    public static byte[] encrypt(File file ){
         KeyGenerator keygenerator;
         try {
             keygenerator = KeyGenerator.getInstance("DES");
@@ -25,15 +25,15 @@ public class Encryptor {
             
             byte[] bytes = getFileBytes(file);
             
-             Cipher cipher;
-             
+            Cipher cipher;
+            
             cipher = Cipher.getInstance("DES/ECB/PKCS5Padding");
 
             // Initialize the cipher for encryption
             cipher.init(Cipher.ENCRYPT_MODE, myDesKey);
-            
+                   
             byte[] fileEncrypted = cipher.doFinal(bytes);
-            
+  
             return fileEncrypted;
             
         } catch (NoSuchAlgorithmException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException | NoSuchPaddingException ex) {
@@ -51,10 +51,6 @@ public class Encryptor {
 	    fileInputStream = new FileInputStream(file);
 	    fileInputStream.read(bFile);
 	    fileInputStream.close();
-
-	    for (int i = 0; i < bFile.length; i++) {
-	       	System.out.print((char)bFile[i]);
-            }
 
 	    System.out.println("Done");
             return bFile;

@@ -8,6 +8,8 @@ package main;
 import GUI.ID_Asker;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.event.ActionEvent;
@@ -37,14 +39,18 @@ public class Main extends JApplet {
         SwingUtilities.invokeLater(new Runnable() {
             
             @Override
-            public void run() {
+            public  void run() {
                 try {
                     UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
                 } catch (Exception e) {
                 }
                 
+                CardReader.prepare();
+                
                 ID_Asker ask = new ID_Asker();
                 ask.setVisible(true);
+               
+                
                 
 //                JFrame frame = new JFrame("JavaFX 2 in Swing");
 //                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

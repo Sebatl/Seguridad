@@ -51,9 +51,9 @@ public class Decryptor {
 	    fileInputStream.read(bFile);
 	    fileInputStream.close();
 
-	    for (int i = 0; i < bFile.length; i++) {
+	    /*for (int i = 0; i < bFile.length; i++) {
 	       	System.out.print((char)bFile[i]);
-            }
+            }*/
 
 	    System.out.println("Done");
             return bFile;

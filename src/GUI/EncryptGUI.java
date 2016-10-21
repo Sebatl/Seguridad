@@ -2,6 +2,9 @@
 package GUI;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import main.Encryptor;
 
 
@@ -74,7 +77,7 @@ public class EncryptGUI extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(135, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -97,13 +100,47 @@ public class EncryptGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        System.out.println("Encruptando "+Filename.getText());
+        //System.out.println("Encruptando "+Filename.getText());
         byte[] newFile = Encryptor.encrypt(file);
         if(newFile != null){
-           FileSaverGUI fileSaver = new FileSaverGUI();
+          /* FileSaverGUI fileSaver = new FileSaverGUI(menu);
            fileSaver.setFileBytes(newFile);
            fileSaver.setCipher(true);
            fileSaver.setVisible(true);
+           this.setVisible(false);*/
+          
+          
+        JFileChooser chooser = new JFileChooser();
+        chooser.setDialogTitle("Guardar");
+        int result = chooser.showSaveDialog(null);
+        switch (result) {
+        case JFileChooser.APPROVE_OPTION:
+            String filename = chooser.getSelectedFile().getAbsolutePath() + ".cip";
+            FileOutputStream fos;
+            try{
+             fos = new FileOutputStream(filename);
+                fos.write(newFile);
+                fos.close();
+                System.out.println("FINISHED");
+
+                JOptionPane.showMessageDialog(this,
+                "Operación finalizada",
+                 "Cifrar",
+                 JOptionPane.INFORMATION_MESSAGE);
+                menu.setVisible(true);
+                this.setVisible(false);
+            }catch(Exception e){
+                
+            }
+          break;
+        case JFileChooser.CANCEL_OPTION:
+          System.out.println("Cancel or the close-dialog icon was clicked");
+          break;
+        case JFileChooser.ERROR_OPTION:
+          System.out.println("Error");
+          break;
+        }
+          
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
