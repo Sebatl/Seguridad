@@ -5,6 +5,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import main.Login;
+import main.User;
+import GUI.MenuGUI;
  
 public class LoginGUI extends javax.swing.JFrame {
 
