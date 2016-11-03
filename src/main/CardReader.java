@@ -6,6 +6,7 @@ import javax.smartcardio.Card;
 import javax.smartcardio.CardException;
 import javax.smartcardio.CardTerminal;
 import javax.smartcardio.TerminalFactory;
+import sun.security.pkcs11.SunPKCS11;
 
 public class CardReader {
 
@@ -29,6 +30,7 @@ public class CardReader {
             System.out.println("Tarjeta: " + card);
 
             //TODO: Usar PKCSS 11
+            PKSC11Tools.prepare();
             ATR atr = card.getATR();
             byte[] ATR = atr.getBytes();
 

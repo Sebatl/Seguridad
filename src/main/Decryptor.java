@@ -31,6 +31,10 @@ public class Decryptor {
 
             byte[] bytes = getFileBytes(file);
 
+            if(bytes == null){
+                return null;
+            }
+            
             Cipher unCipher;
             unCipher = Cipher.getInstance("DES/ECB/PKCS5Padding");
 
@@ -41,7 +45,7 @@ public class Decryptor {
             return fileDecrypted;
 
         } catch (NoSuchAlgorithmException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException | NoSuchPaddingException | InvalidKeySpecException ex) {
-            Logger.getLogger(Decryptor.class.getName()).log(Level.SEVERE, null, ex);
+            //Logger.getLogger(Decryptor.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
     }
