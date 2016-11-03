@@ -6,5 +6,6 @@
 package main;
 
 public class User {
+
     public static String ci;
 }

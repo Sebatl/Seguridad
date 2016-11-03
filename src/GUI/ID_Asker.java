@@ -5,38 +5,30 @@
  */
 package GUI;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.smartcardio.Card;
-import main.CardReader;
 import main.User;
 import main.UserChecker;
 import reader.ReadThread;
 
-/**
- *
- * @author Seba
- */
 public class ID_Asker extends javax.swing.JFrame {
 
     /**
      * Creates new form ID_Asker
      */
     public ID_Asker() {
-       
+
         initComponents();
         ReadThread rT = new ReadThread(this);
         rT.start();
-        
+
     }
-    
-    public void ready(){
-        
+
+    public void ready() {
+
         //User.ci = "46917176";
-        if(UserChecker.isRegistered(User.ci)){
-         login();
-        }else{
-           register();
+        if (UserChecker.isRegistered(User.ci)) {
+            login();
+        } else {
+            register();
         }
     }
 
@@ -76,18 +68,18 @@ public class ID_Asker extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void register(){
+    private void register() {
         RegisterGUI register = new RegisterGUI();
         register.setVisible(true);
         this.setVisible(false);
     }
-    
-    private void login(){
+
+    private void login() {
         LoginGUI login = new LoginGUI();
         login.setVisible(true);
         this.setVisible(false);
     }
-    
+
     /**
      * @param args the command line arguments
      */
@@ -115,15 +107,13 @@ public class ID_Asker extends javax.swing.JFrame {
         }
         //</editor-fold>
 
-       
-        
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new ID_Asker().setVisible(true);
             }
         });
-        
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

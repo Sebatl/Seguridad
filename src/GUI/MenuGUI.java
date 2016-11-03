@@ -1,14 +1,10 @@
 package GUI;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import main.Decryptor;
 
 public class MenuGUI extends javax.swing.JFrame {
 
-   
     public MenuGUI() {
         initComponents();
     }
@@ -86,27 +82,38 @@ public class MenuGUI extends javax.swing.JFrame {
         chooser.setDialogTitle("Seleccionar archivo a encriptar");
         int result = chooser.showOpenDialog(null);
         switch (result) {
-        case JFileChooser.APPROVE_OPTION:
-            EncryptGUI encrypt = new EncryptGUI();
-            File file = chooser.getSelectedFile();
-            encrypt.setFile(file);
-            encrypt.setMenu(this);
-            encrypt.setVisible(true);
-            this.setVisible(false);
-          break;
-        case JFileChooser.CANCEL_OPTION:
-          System.out.println("Cancel or the close-dialog icon was clicked");
-          break;
-        case JFileChooser.ERROR_OPTION:
-          System.out.println("Error");
-          break;
+            case JFileChooser.APPROVE_OPTION:
+                encrypt(chooser.getSelectedFile());
+                break;
+            case JFileChooser.CANCEL_OPTION:
+                System.out.println("Cancel");
+                break;
+            case JFileChooser.ERROR_OPTION:
+                System.out.println("Error");
+                break;
         }
-        
+
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void encrypt(File file) {
+        EncryptGUI encryptor = new EncryptGUI();
+        encryptor.setFile(file);
+        encryptor.setMenu(this);
+        encryptor.setVisible(true);
+        this.setVisible(false);
+    }
+
+    private void decrypt(File file) {
+        DecryptGUI decryptor = new DecryptGUI();
+        decryptor.setFile(file);
+        decryptor.setMenu(this);
+        decryptor.setVisible(true);
+        this.setVisible(false);
+    }
 
     //Firmar
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-       
+
     }//GEN-LAST:event_jButton2ActionPerformed
 
     //Desencriptar
@@ -115,55 +122,24 @@ public class MenuGUI extends javax.swing.JFrame {
         chooser.setDialogTitle("Seleccionar archivo a desencriptar");
         int result = chooser.showOpenDialog(null);
         switch (result) {
-        case JFileChooser.APPROVE_OPTION:
-            File file = chooser.getSelectedFile();
-            if(file.getName().contains(".cip")){
-                byte[] decFile = Decryptor.decrypt(file);
-                
-                if(decFile != null){
-                    decryptTo(decFile);
+            case JFileChooser.APPROVE_OPTION:
+                File file = chooser.getSelectedFile();
+                if (file.getName().contains(".cip")) {
+                    decrypt(chooser.getSelectedFile());
+                }else{
+                    ErrorDialog.showError(this, "Archivo no válido");
                 }
-                
-            }else{
-                JOptionPane.showMessageDialog(this,
-                "Archivo inválido",
-                 "Error",
-                 JOptionPane.ERROR_MESSAGE);
-            }
-          break;
-        case JFileChooser.CANCEL_OPTION:
-          System.out.println("Cancel or the close-dialog icon was clicked");
-          break;
-        case JFileChooser.ERROR_OPTION:
-          System.out.println("Error");
-          break;
+                break;
+            case JFileChooser.CANCEL_OPTION:
+                System.out.println("Cancel");
+                break;
+            case JFileChooser.ERROR_OPTION:
+                System.out.println("Error");
+                break;
+
         }
     }//GEN-LAST:event_jButton3ActionPerformed
 
-    private void decryptTo(byte[] decFile){
-        JFileChooser chooser = new JFileChooser();
-        chooser.setDialogTitle("Guardar");
-        int result = chooser.showSaveDialog(null);
-        switch (result) {
-        case JFileChooser.APPROVE_OPTION:
-            String filename = chooser.getSelectedFile().getAbsolutePath();
-            FileOutputStream fos;
-            try{
-             fos = new FileOutputStream(filename);
-                fos.write(decFile);
-                fos.close();
-                System.out.println("FINISHED");
-
-                JOptionPane.showMessageDialog(this,
-                "Operación finalizada",
-                 "Descifrar",
-                 JOptionPane.INFORMATION_MESSAGE);
-            }catch(Exception e){
-                
-            }
-        }
-    }
-    
     /**
      * @param args the command line arguments
      */

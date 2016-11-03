@@ -3,15 +3,11 @@ package GUI;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 import main.PasswordChecker;
 import main.Registration;
 
-/**
- *
- * @author Seba
- */
 public class RegisterGUI extends javax.swing.JFrame {
+
     /**
      * Creates new form Register
      */
@@ -80,18 +76,18 @@ public class RegisterGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         String pass = String.valueOf(password.getPassword());
         System.out.println(pass);
-       if(PasswordChecker.Check(pass)){
+        if (PasswordChecker.Check(pass)) {
             try {
-                Registration.register(main.User.ci,pass);
+                Registration.register(main.User.ci, pass);
                 MenuGUI menu = new MenuGUI();
                 menu.setVisible(true);
                 this.setVisible(false);
             } catch (ClassNotFoundException | SQLException ex) {
                 Logger.getLogger(RegisterGUI.class.getName()).log(Level.SEVERE, null, ex);
             }
-       }else{
-           showError("La contraseña debe tener como mínimo 6 caracteres, 1 máyuscula y un número");
-       }
+        } else {
+            ErrorDialog.showError(this, "La contraseña debe tener como mínimo 6 caracteres, 1 máyuscula y un número");
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
@@ -130,15 +126,7 @@ public class RegisterGUI extends javax.swing.JFrame {
         });
     }
 
-    private void showError(String message){
-        JOptionPane.showMessageDialog(this,
-   message,
-    "Error",
-    JOptionPane.WARNING_MESSAGE);
-    }
-    
-    
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;

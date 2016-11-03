@@ -9,36 +9,32 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-/**
- *
- * @author Seba
- */
 public class DataBaseConnection {
-    
-    public static Connection getDataBaseConnection(){
+
+    public static Connection getDataBaseConnection() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
-	} catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
             return null;
-	}
+        }
 
-	Connection connection = null;
-	try {
+        Connection connection = null;
+        try {
             connection = DriverManager
-            .getConnection("jdbc:mysql://localhost:3306/seguridad","root", "lintux_tl1");
+                    .getConnection("jdbc:mysql://localhost:3306/seguridad", "root", "password");
 
-	} catch (SQLException e) {
+        } catch (SQLException e) {
             System.out.println("Connection Failed! Check output console");
             e.printStackTrace();
             return null;
-	}
+        }
 
-	if (connection != null) {
-		return connection;
-	} else {
-		return null;
-	}
+        if (connection != null) {
+            return connection;
+        } else {
+            return null;
+        }
     }
-    
+
 }

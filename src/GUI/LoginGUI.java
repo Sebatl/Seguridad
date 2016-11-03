@@ -3,9 +3,8 @@ package GUI;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 import main.Login;
- 
+
 public class LoginGUI extends javax.swing.JFrame {
 
     public LoginGUI() {
@@ -70,17 +69,16 @@ public class LoginGUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-       String pass = String.valueOf(password.getPassword());
+        String pass = String.valueOf(password.getPassword());
         try {
-            if(Login.enter(main.User.ci,pass)){
+            if (Login.enter(main.User.ci, pass)) {
                 MenuGUI menu = new MenuGUI();
                 menu.setVisible(true);
                 this.setVisible(false);
-            }else{
-                showError("Credenciales inválidas");
-            }} catch (ClassNotFoundException ex) {
-            Logger.getLogger(LoginGUI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
+            } else {
+                ErrorDialog.showError(this, "Credenciales inválidas");
+            }
+        } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(LoginGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -120,13 +118,7 @@ public class LoginGUI extends javax.swing.JFrame {
             }
         });
     }
-    
-    private void showError(String message){
-        JOptionPane.showMessageDialog(this,
-   message,
-    "Error",
-    JOptionPane.ERROR_MESSAGE);
-    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;

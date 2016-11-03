@@ -5,23 +5,20 @@
  */
 package main;
 
-/**
- *
- * @author Seba
- */
 public class PasswordChecker {
-    public static boolean Check(String password){
-        if(password.length() >= 6){ //Largo
-            if(password.matches(".*[0-9].*")){    //Número
-                if(password.matches(".*[A-Z].*")){    //Letra mayuscula
+
+    public static boolean Check(String password) {
+        if (password.length() >= 6) { //Largo
+            if (password.matches(".*[0-9].*")) {    //Número
+                if (password.matches(".*[A-Z].*")) {    //Letra mayuscula
                     return true;
-                }else{
+                } else {
                     return false;
                 }
-            }else{
+            } else {
                 return false;
             }
-        }else{
+        } else {
             return false;
         }
     }

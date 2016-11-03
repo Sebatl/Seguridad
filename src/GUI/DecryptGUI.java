@@ -6,15 +6,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import main.Encryptor;
+import main.Decryptor;
 import main.FileTools;
 
-public class EncryptGUI extends javax.swing.JFrame {
+public class DecryptGUI extends javax.swing.JFrame {
 
     private MenuGUI menu;
     private File file;
 
-    public EncryptGUI() {
+    public DecryptGUI() {
         initComponents();
     }
 
@@ -44,7 +44,7 @@ public class EncryptGUI extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Encriptar");
+        setTitle("Desencriptar");
 
         Filename.setFont(new java.awt.Font("Ubuntu", 1, 14)); // NOI18N
         Filename.setHorizontalAlignment(javax.swing.JTextField.CENTER);
@@ -52,7 +52,7 @@ public class EncryptGUI extends javax.swing.JFrame {
         Filename.setEnabled(false);
 
         jButton1.setFont(new java.awt.Font("Ubuntu", 1, 18)); // NOI18N
-        jButton1.setText("Encriptar");
+        jButton1.setText("Desencriptar");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -75,21 +75,23 @@ public class EncryptGUI extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(130, 130, 130)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(135, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(Filename, javax.swing.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
-                            .addComponent(cipherPassword))
-                        .addGap(85, 85, 85))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jLabel1)
-                        .addGap(136, 136, 136))))
+                        .addGap(136, 136, 136))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(10, 10, 10)
+                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(Filename, javax.swing.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
+                                .addComponent(cipherPassword)))
+                        .addGap(85, 85, 85))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -116,31 +118,28 @@ public class EncryptGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        //System.out.println("Encruptando "+Filename.getText());
         String password = String.valueOf(cipherPassword.getPassword());
         if (password.length() >= 8) {
-            byte[] newFile = Encryptor.encrypt(file, password);
-            if (newFile != null) {
+            byte[] decFile = Decryptor.decrypt(file, password);
+            if (decFile != null) {
 
                 JFileChooser chooser = new JFileChooser();
                 chooser.setDialogTitle("Guardar");
                 int result = chooser.showSaveDialog(null);
                 switch (result) {
                     case JFileChooser.APPROVE_OPTION:
-                        String extension = FileTools.getExtension(file);
-                        String filename = filename = chooser.getSelectedFile().getAbsolutePath()
-                                + extension + ".cip";
-
+                        String extension = FileTools.getExtension(file).replace(".cip", "");
+                        String filename = chooser.getSelectedFile().getAbsolutePath() + extension;
                         FileOutputStream fos;
                         try {
                             fos = new FileOutputStream(filename);
-                            fos.write(newFile);
+                            fos.write(decFile);
                             fos.close();
                             System.out.println("FINISHED");
 
                             JOptionPane.showMessageDialog(this,
                                     "Operación finalizada",
-                                    "Cifrar",
+                                    "Descifrar",
                                     JOptionPane.INFORMATION_MESSAGE);
                             menu.setVisible(true);
                             this.setVisible(false);
@@ -157,7 +156,7 @@ public class EncryptGUI extends javax.swing.JFrame {
                 }
             }
         } else {
-            ErrorDialog.showError(this, "La contraseña debe tener por lo menos 8 caracteres");
+            ErrorDialog.showError(this,"La contraseña debe tener por lo menos 8 caracteres");
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -178,20 +177,21 @@ public class EncryptGUI extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(EncryptGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DecryptGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(EncryptGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DecryptGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(EncryptGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DecryptGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(EncryptGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DecryptGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new EncryptGUI().setVisible(true);
+                new DecryptGUI().setVisible(true);
             }
         });
     }
