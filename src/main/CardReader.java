@@ -21,7 +21,6 @@ public class CardReader {
         } catch (CardException e) {
             System.out.println("Sin lectores");
         }
-
     }
 
     public static Card read() {
@@ -29,6 +28,7 @@ public class CardReader {
             Card card = terminal.connect("*");
             System.out.println("Tarjeta: " + card);
 
+            //TODO: Usar PKCSS 11
             ATR atr = card.getATR();
             byte[] ATR = atr.getBytes();
 
@@ -47,5 +47,4 @@ public class CardReader {
         }
         return null;
     }
-
 }
