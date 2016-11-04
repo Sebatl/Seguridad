@@ -8,13 +8,7 @@ package main;
 import GUI.ID_Asker;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import javafx.application.Platform;
-import javafx.embed.swing.JFXPanel;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
+
 import javax.swing.JApplet;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -24,7 +18,7 @@ public class Main extends JApplet {
 
     private static final int JFXPANEL_WIDTH_INT = 300;
     private static final int JFXPANEL_HEIGHT_INT = 250;
-    private static JFXPanel fxContainer;
+    //private static JFXPanel fxContainer;
 
     /**
      * @param args the command line arguments
@@ -63,7 +57,7 @@ public class Main extends JApplet {
 
     @Override
     public void init() {
-        fxContainer = new JFXPanel();
+       /* fxContainer = new JFXPanel();
         fxContainer.setPreferredSize(new Dimension(JFXPANEL_WIDTH_INT, JFXPANEL_HEIGHT_INT));
         add(fxContainer, BorderLayout.CENTER);
         // create JavaFX scene
@@ -73,10 +67,10 @@ public class Main extends JApplet {
             public void run() {
                 createScene();
             }
-        });
+        });*/
     }
 
-    private void createScene() {
+  /*  private void createScene() {
         Button btn = new Button();
         btn.setText("Say 'Hello World'");
         btn.setOnAction(new EventHandler<ActionEvent>() {
@@ -89,6 +83,6 @@ public class Main extends JApplet {
         StackPane root = new StackPane();
         root.getChildren().add(btn);
         fxContainer.setScene(new Scene(root));
-    }
+    }*/
 
 }
