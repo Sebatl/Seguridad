@@ -8,7 +8,6 @@ package GUI;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-
 public class ErrorDialog {
 
     public static void showError(JFrame frame, String message) {
