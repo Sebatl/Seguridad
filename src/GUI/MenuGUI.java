@@ -1,12 +1,16 @@
 package GUI;
 
+import java.awt.HeadlessException;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.security.PrivateKey;
 import java.security.Signature;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import main.FileTools;
 import main.User;
 
@@ -162,7 +166,8 @@ public class MenuGUI extends javax.swing.JFrame {
                 byte[] fileBytes = FileTools.getFileBytes(file);
                  {
                     try {
-                        signDocument(fileBytes, User.privateKey);
+                        byte[] sfb = signDocument(fileBytes, User.privateKey);
+                        saveSignedDocument(sfb);
                     } catch (GeneralSecurityException ex) {
                         Logger.getLogger(MenuGUI.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -201,6 +206,37 @@ public class MenuGUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton3ActionPerformed
 
+    private void saveSignedDocument(byte[] bytes) {
+        JFileChooser chooser = new JFileChooser();
+        chooser.setDialogTitle("Guardar");
+        int result = chooser.showSaveDialog(null);
+        switch (result) {
+            case JFileChooser.APPROVE_OPTION:
+                FileOutputStream fos;
+                try {
+                    fos = new FileOutputStream(chooser.getSelectedFile().getAbsolutePath());
+                    fos.write(bytes);
+                    fos.close();
+                    System.out.println("FINISHED");
+
+                    JOptionPane.showMessageDialog(this,
+                            "Operación finalizada",
+                            "Firmar",
+                            JOptionPane.INFORMATION_MESSAGE);
+
+                } catch (HeadlessException | IOException e) {
+
+                }
+                break;
+            case JFileChooser.CANCEL_OPTION:
+                System.out.println("Cancel or the close-dialog icon was clicked");
+                break;
+            case JFileChooser.ERROR_OPTION:
+                System.out.println("Error");
+                break;
+        }
+    }
+
     //Comprobar firma
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         JFileChooser chooser = new JFileChooser();
@@ -209,7 +245,7 @@ public class MenuGUI extends javax.swing.JFrame {
         switch (result) {
             case JFileChooser.APPROVE_OPTION:
                 File file = chooser.getSelectedFile();
-                
+
                 break;
             case JFileChooser.CANCEL_OPTION:
                 System.out.println("Cancel");
