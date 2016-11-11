@@ -144,12 +144,9 @@ public class MenuGUI extends javax.swing.JFrame {
         this.setVisible(false);
     }
 
-    private byte[] signDocument(byte[] aDocument,
-            PrivateKey aPrivateKey)
-            throws GeneralSecurityException {
-        Signature signatureAlgorithm
-                = Signature.getInstance("SHA1withRSA");
-        signatureAlgorithm.initSign(aPrivateKey);
+    private byte[] signDocument(byte[] aDocument, PrivateKey aPrivateKey) throws GeneralSecurityException {
+        Signature signatureAlgorithm = Signature.getInstance("SHA1withRSA");
+        signatureAlgorithm.initSign(User.privateKey);
         signatureAlgorithm.update(aDocument);
         byte[] digitalSignature = signatureAlgorithm.sign();
         return digitalSignature;
