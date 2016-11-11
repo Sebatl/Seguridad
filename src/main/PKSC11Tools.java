@@ -34,7 +34,7 @@ public class PKSC11Tools {
                     = new sun.security.pkcs11.SunPKCS11(configName);
             Security.addProvider(pkcs11Provider);
 
-            char[] pin = {'1', '2', '3', '4'};
+            char[] pin = {'8', '6', '2', '0'};
             KeyStore smartCardKeyStore = KeyStore.getInstance("PKCS11");
             smartCardKeyStore.load(null, pin);
 
