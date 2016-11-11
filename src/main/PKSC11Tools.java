@@ -51,6 +51,11 @@ public class PKSC11Tools {
                 PrivateKey privateKey
                         = (PrivateKey) smartCardKeyStore.getKey(alias, null);
                 System.out.println("Private key: " + privateKey);
+                
+                
+                cert.getSerialNumber();
+               
+                
             }
 
         } catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException ex) {
