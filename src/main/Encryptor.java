@@ -29,7 +29,7 @@ public class Encryptor {
             SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
             SecretKey secretKey = keyFactory.generateSecret(desKeySpec);
 
-            byte[] bytes = getFileBytes(file);
+            byte[] bytes = FileTools.getFileBytes(file);
 
             Cipher cipher;
 
@@ -47,22 +47,5 @@ public class Encryptor {
             return null;
         }
 
-    }
-
-    private static byte[] getFileBytes(File file) {
-        byte[] bFile = new byte[(int) file.length()];
-        FileInputStream fileInputStream;
-        try {
-            //convert file into array of bytes
-            fileInputStream = new FileInputStream(file);
-            fileInputStream.read(bFile);
-            fileInputStream.close();
-
-            System.out.println("Done");
-            return bFile;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
     }
 }

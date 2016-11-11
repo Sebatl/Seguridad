@@ -1,7 +1,14 @@
 package GUI;
 
 import java.io.File;
+import java.security.GeneralSecurityException;
+import java.security.PrivateKey;
+import java.security.Signature;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import main.FileTools;
+import main.User;
 
 public class MenuGUI extends javax.swing.JFrame {
 
@@ -21,6 +28,8 @@ public class MenuGUI extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jButton4 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Menu");
@@ -49,28 +58,48 @@ public class MenuGUI extends javax.swing.JFrame {
             }
         });
 
+        jLabel1.setFont(new java.awt.Font("Ubuntu", 1, 36)); // NOI18N
+        jLabel1.setText("Menu");
+        jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+
+        jButton4.setFont(new java.awt.Font("Ubuntu", 1, 18)); // NOI18N
+        jButton4.setText("Comprobar firma");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(153, 153, 153)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(108, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(132, Short.MAX_VALUE))
+                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton4, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(31, 31, 31)))
+                .addGap(105, 105, 105))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(103, 103, 103)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(30, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(57, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20))
         );
 
         pack();
@@ -111,9 +140,41 @@ public class MenuGUI extends javax.swing.JFrame {
         this.setVisible(false);
     }
 
+    private byte[] signDocument(byte[] aDocument,
+            PrivateKey aPrivateKey)
+            throws GeneralSecurityException {
+        Signature signatureAlgorithm
+                = Signature.getInstance("SHA1withRSA");
+        signatureAlgorithm.initSign(aPrivateKey);
+        signatureAlgorithm.update(aDocument);
+        byte[] digitalSignature = signatureAlgorithm.sign();
+        return digitalSignature;
+    }
+
     //Firmar
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-
+        JFileChooser chooser = new JFileChooser();
+        chooser.setDialogTitle("Seleccionar archivo a firmar");
+        int result = chooser.showOpenDialog(null);
+        switch (result) {
+            case JFileChooser.APPROVE_OPTION:
+                File file = chooser.getSelectedFile();
+                byte[] fileBytes = FileTools.getFileBytes(file);
+                 {
+                    try {
+                        signDocument(fileBytes, User.privateKey);
+                    } catch (GeneralSecurityException ex) {
+                        Logger.getLogger(MenuGUI.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                break;
+            case JFileChooser.CANCEL_OPTION:
+                System.out.println("Cancel");
+                break;
+            case JFileChooser.ERROR_OPTION:
+                System.out.println("Error");
+                break;
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     //Desencriptar
@@ -126,7 +187,7 @@ public class MenuGUI extends javax.swing.JFrame {
                 File file = chooser.getSelectedFile();
                 if (file.getName().contains(".cip")) {
                     decrypt(chooser.getSelectedFile());
-                }else{
+                } else {
                     ErrorDialog.showError(this, "Archivo no válido");
                 }
                 break;
@@ -139,6 +200,26 @@ public class MenuGUI extends javax.swing.JFrame {
 
         }
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    //Comprobar firma
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        JFileChooser chooser = new JFileChooser();
+        chooser.setDialogTitle("Seleccionar archivo a comprobar");
+        int result = chooser.showOpenDialog(null);
+        switch (result) {
+            case JFileChooser.APPROVE_OPTION:
+                File file = chooser.getSelectedFile();
+                
+                break;
+            case JFileChooser.CANCEL_OPTION:
+                System.out.println("Cancel");
+                break;
+            case JFileChooser.ERROR_OPTION:
+                System.out.println("Error");
+                break;
+
+        }
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -179,5 +260,7 @@ public class MenuGUI extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 }

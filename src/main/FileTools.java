@@ -6,6 +6,8 @@
 package main;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 public class FileTools {
 
@@ -18,4 +20,21 @@ public class FileTools {
         return "";
     }
 
+     public static byte[] getFileBytes(File file) {
+        byte[] bFile = new byte[(int) file.length()];
+        FileInputStream fileInputStream;
+        try {
+            //convert file into array of bytes
+            fileInputStream = new FileInputStream(file);
+            fileInputStream.read(bFile);
+            fileInputStream.close();
+
+            System.out.println("Done");
+            return bFile;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
 }

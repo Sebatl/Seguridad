@@ -5,7 +5,6 @@
  */
 package main;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -23,20 +22,24 @@ import java.util.logging.Logger;
 public class PKSC11Tools {
 
     static String configName = "C:\\pkcs11.cfg";
-    static String password = "1234";
     static Provider p;
 
     public static void prepare() {
 
         try {
-            String pkcs11ConfigFile = "c:\\smartcards\\config\\pkcs11.cfg";
             Provider pkcs11Provider
                     = new sun.security.pkcs11.SunPKCS11(configName);
             Security.addProvider(pkcs11Provider);
 
-            char[] pin = {'8', '6', '2', '0'};
-            KeyStore smartCardKeyStore = KeyStore.getInstance("PKCS11");
-            smartCardKeyStore.load(null, pin);
+            //char[] pin = {'8', '6', '2', '0'};
+            //KeyStore smartCardKeyStore = KeyStore.getInstance("PKCS11");
+            //smartCardKeyStore.load(null, pin);
+            KeyStore.CallbackHandlerProtection chp
+                    = new KeyStore.CallbackHandlerProtection(new MyGuiCallbackHandler());
+            KeyStore.Builder builder
+                    = KeyStore.Builder.newInstance("PKCS11", null, chp);
+
+            KeyStore smartCardKeyStore = builder.getKeyStore();
 
             Enumeration aliasesEnum = smartCardKeyStore.aliases();
             while (aliasesEnum.hasMoreElements()) {
@@ -50,7 +53,7 @@ public class PKSC11Tools {
                 System.out.println("Private key: " + privateKey);
             }
 
-        } catch (KeyStoreException | IOException | NoSuchAlgorithmException | CertificateException | UnrecoverableKeyException ex) {
+        } catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException ex) {
             Logger.getLogger(PKSC11Tools.class.getName()).log(Level.SEVERE, null, ex);
         }
 

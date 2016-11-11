@@ -5,7 +5,12 @@
  */
 package main;
 
+import java.security.PrivateKey;
+import java.security.cert.X509Certificate;
+
 public class User {
 
     public static String ci;
+    public static X509Certificate cert;
+    public static PrivateKey privateKey;
 }
