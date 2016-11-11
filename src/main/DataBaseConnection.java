@@ -12,29 +12,27 @@ import java.sql.SQLException;
 public class DataBaseConnection {
 
     public static Connection getDataBaseConnection() {
+
+        Connection connection = null;
+
         try {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            System.out.println("Falla en el driver");
             return null;
         }
 
-        Connection connection = null;
         try {
             connection = DriverManager
-            .getConnection("jdbc:mysql://localhost:3306/seguridad","root", "root");
+                    .getConnection("jdbc:mysql://localhost:3306/seguridad", "root", "root");
 
         } catch (SQLException e) {
-            System.out.println("Connection Failed! Check output console");
-            e.printStackTrace();
+            System.out.println("Falla en la conexión con la base de datos");
             return null;
         }
 
-        if (connection != null) {
-            return connection;
-        } else {
-            return null;
-        }
+        return connection;
+
     }
 
 }

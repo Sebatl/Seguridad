@@ -43,6 +43,7 @@ public class PKSC11Tools {
             */
             Enumeration aliasesEnum = smartCardKeyStore.aliases();
             while (aliasesEnum.hasMoreElements()) {
+<<<<<<< HEAD
                 String alias = (String) aliasesEnum.nextElement();                
                 X509Certificate cert = (X509Certificate) smartCardKeyStore.getCertificate(alias);
                 PrivateKey privateKey = (PrivateKey) smartCardKeyStore.getKey(alias, null);
@@ -53,6 +54,21 @@ public class PKSC11Tools {
                 
                 User.ci = getDNIFromDN(cert.getSubjectDN().toString());
                 System.out.println("Cedula: "+ User.ci);
+=======
+                String alias = (String) aliasesEnum.nextElement();
+                System.out.println("Alias: " + alias);
+                X509Certificate cert
+                        = (X509Certificate) smartCardKeyStore.getCertificate(alias);
+                System.out.println("Certificate: " + cert);
+                PrivateKey privateKey
+                        = (PrivateKey) smartCardKeyStore.getKey(alias, null);
+                System.out.println("Private key: " + privateKey);
+                
+                
+                cert.getSerialNumber();
+               
+                
+>>>>>>> origin/master-FX
             }
 
         } catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException | CertificateException | IOException ex) {

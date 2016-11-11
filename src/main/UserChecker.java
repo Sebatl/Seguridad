@@ -10,7 +10,7 @@ public class UserChecker {
         try {
             Connection connection = DataBaseConnection.getDataBaseConnection();
             if (connection != null) {
-                String selectSQL = "SELECT COUNT(ci) FROM User WHERE ci = ?";
+                String selectSQL = "SELECT COUNT(ci) FROM user WHERE ci = ?";
                 PreparedStatement preparedStatement = connection.prepareStatement(selectSQL);
                 preparedStatement.setString(1, ci);
 
