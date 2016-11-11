@@ -28,7 +28,6 @@ public class ReadThread extends Thread{
                 Logger.getLogger(ReadThread.class.getName()).log(Level.SEVERE, null, ex);
             }
         }   while(card == null);
-        User.ci = "46917176";    //TODO Setear el valor correcto
         asker.ready();
     }
 }

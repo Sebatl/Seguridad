@@ -31,32 +31,52 @@ public class PKSC11Tools {
                     = new sun.security.pkcs11.SunPKCS11(configName);
             Security.addProvider(pkcs11Provider);
 
-            //char[] pin = {'8', '6', '2', '0'};
-            //KeyStore smartCardKeyStore = KeyStore.getInstance("PKCS11");
-            //smartCardKeyStore.load(null, pin);
-            KeyStore.CallbackHandlerProtection chp
+            char[] pin = {'8', '6', '2', '0'};
+            KeyStore smartCardKeyStore = KeyStore.getInstance("PKCS11");
+            smartCardKeyStore.load(null, pin);
+            /*KeyStore.CallbackHandlerProtection chp
                     = new KeyStore.CallbackHandlerProtection(new MyGuiCallbackHandler());
             KeyStore.Builder builder
                     = KeyStore.Builder.newInstance("PKCS11", null, chp);
 
             KeyStore smartCardKeyStore = builder.getKeyStore();
-
+            */
             Enumeration aliasesEnum = smartCardKeyStore.aliases();
             while (aliasesEnum.hasMoreElements()) {
-                String alias = (String) aliasesEnum.nextElement();
-                System.out.println("Alias: " + alias);
-                X509Certificate cert
-                        = (X509Certificate) smartCardKeyStore.getCertificate(alias);
-                System.out.println("Certificate: " + cert);
-                PrivateKey privateKey
-                        = (PrivateKey) smartCardKeyStore.getKey(alias, null);
-                System.out.println("Private key: " + privateKey);
+                String alias = (String) aliasesEnum.nextElement();                
+                X509Certificate cert = (X509Certificate) smartCardKeyStore.getCertificate(alias);
+                PrivateKey privateKey = (PrivateKey) smartCardKeyStore.getKey(alias, null);
+
+                System.out.println("Serial Number: "+cert.getSerialNumber());
+                System.out.println("Subject DN: "+cert.getSubjectDN());
+                System.out.println("Issuer DN: "+cert.getIssuerDN());
+                
+                User.ci = getDNIFromDN(cert.getSubjectDN().toString());
+                System.out.println("Cedula: "+ User.ci);
             }
 
-        } catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException ex) {
+        } catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException | CertificateException | IOException ex) {
             Logger.getLogger(PKSC11Tools.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
-
+    
+    public String getNombreFromDN(String dn){
+        return dn.split("CN=")[1].split(",")[0];
+    }
+    
+    public static String getDNIFromDN(String dn){
+        return dn.split("SERIALNUMBER=")[1].split(",")[0].replace("DNI", "");
+    }
+    
+    public String getCountryFromDN(String dn) {
+        return dn.split("C=")[1].split(",")[0];
+    }
+    
+    public static void print(Object... params)
+    {
+        String s = "";
+        for (Object i : params)
+            s += i + " ";
+        System.out.println(s);
+    }
 }
