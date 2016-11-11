@@ -32,17 +32,7 @@ public class CardReader {
                 System.out.println("Tarjeta: " + card);
 
                 PKSC11Tools.prepare();
-                ATR atr = card.getATR();
-                byte[] ATR = atr.getBytes();
 
-                System.out.println("ATR: " + ATR);
-
-                StringBuilder sb = new StringBuilder(ATR.length * 2);
-                for (int i = 0; i < ATR.length; i++) {
-                    sb.append(String.format("%02x", ATR[i]));
-                }
-
-                System.out.println(sb.toString());
                 return card;
             }
         } catch (CardException ex) {
