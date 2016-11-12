@@ -91,8 +91,9 @@ public class SignManager {
             if (publicKey != null) {
                 byte[] signatureBytes = loadSignature(signFile);
                 if (signatureBytes != null) {
-                    Signature signature = Signature.getInstance("SHA1withDSA", "SUN");
+                    Signature signature = Signature.getInstance("SHA1withRSA");
                     byte[] fileBytes = FileTools.getFileBytes(file);
+                    signature.initVerify(publicKey);
                     signature.update(fileBytes);
 
                     boolean verifies = signature.verify(signatureBytes);
@@ -100,7 +101,6 @@ public class SignManager {
                     System.out.println("signature verifies: " + verifies);
 
                     return verifies;
-
                 } else {
                     return false;
                 }
@@ -108,7 +108,7 @@ public class SignManager {
                 return false;
             }
 
-        } catch (NoSuchAlgorithmException | NoSuchProviderException | SignatureException ex) {
+        } catch (NoSuchAlgorithmException | SignatureException | InvalidKeyException ex) {
             Logger.getLogger(SignManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
