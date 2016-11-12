@@ -12,13 +12,17 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.InvalidKeyException;
+import java.security.Key;
 import java.security.KeyFactory;
+import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+import java.security.Provider;
 import java.security.PublicKey;
 import java.security.Signature;
 import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
+import java.security.spec.RSAPublicKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -118,12 +122,31 @@ public class SignManager {
             keyfis.read(encKey);
             keyfis.close();
 
-            X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(encKey);
-            KeyFactory keyFactory = KeyFactory.getInstance("RSA", "SUN");
+            PublicKey key = createPublicKey(encKey);
+            
+            return key;
 
-            return keyFactory.generatePublic(pubKeySpec);
+        } catch (IOException ex) {
+            Logger.getLogger(SignManager.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
+    public static PublicKey createPublicKey(byte[] encodedPublicKey) {
+        try {
+            X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(encodedPublicKey);           
+            String algorithm = "RSA";            
+            KeyPairGenerator kpgen = KeyPairGenerator.getInstance(algorithm);
+            Provider provider = kpgen.getProvider();
+            
+            X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(User.cert.getPublicKey().getEncoded());
+            KeyFactory keyFactory = KeyFactory.getInstance(algorithm, provider.getName());
+            
+            PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
 
-        } catch (IOException | NoSuchAlgorithmException | NoSuchProviderException | InvalidKeySpecException ex) {
+            return publicKey;
+        } catch (NoSuchAlgorithmException | NoSuchProviderException | InvalidKeySpecException ex) {
             Logger.getLogger(SignManager.class
                     .getName()).log(Level.SEVERE, null, ex);
         }

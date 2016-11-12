@@ -47,10 +47,12 @@ public class PKSC11Tools {
                 X509Certificate cert = (X509Certificate) smartCardKeyStore.getCertificate(alias);
                 PrivateKey privateKey = (PrivateKey) smartCardKeyStore.getKey(alias, null);
 
+                System.out.println(cert);
                 System.out.println("Serial Number: "+cert.getSerialNumber());
                 System.out.println("Subject DN: "+cert.getSubjectDN());
                 System.out.println("Issuer DN: "+cert.getIssuerDN());
                 
+                User.cert = cert;
                 User.ci = getDNIFromDN(cert.getSubjectDN().toString());
                 User.privateKey = privateKey;
                 System.out.println("Cedula: "+ User.ci);
