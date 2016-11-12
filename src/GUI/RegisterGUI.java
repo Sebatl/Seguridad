@@ -84,7 +84,7 @@ public class RegisterGUI extends javax.swing.JFrame {
                 Logger.getLogger(RegisterGUI.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            ErrorDialog.showError(this, "La contraseña debe tener como mínimo 6 caracteres, 1 máyuscula y un número");
+            DialogManager.showError(this, "La contraseña debe tener como mínimo 6 caracteres, 1 máyuscula y un número");
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 

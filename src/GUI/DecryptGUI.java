@@ -155,10 +155,10 @@ public class DecryptGUI extends javax.swing.JFrame {
                         break;
                 }
             }else{
-                ErrorDialog.showError(this,"La contraseña es incorrecta");
+                DialogManager.showError(this,"La contraseña es incorrecta");
             }
         } else {
-            ErrorDialog.showError(this,"La contraseña debe tener por lo menos 8 caracteres");
+            DialogManager.showError(this,"La contraseña debe tener por lo menos 8 caracteres");
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 

@@ -1,21 +1,8 @@
 package GUI;
 
-import java.awt.HeadlessException;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.security.GeneralSecurityException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.Signature;
-import java.security.SignatureException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import main.FileTools;
-import main.User;
+import signer.SignManager;
 
 public class MenuGUI extends javax.swing.JFrame {
 
@@ -32,36 +19,36 @@ public class MenuGUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        CipherButton = new javax.swing.JButton();
+        SignButton = new javax.swing.JButton();
+        DecipherButton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        jButton4 = new javax.swing.JButton();
+        SignCheckButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Menu");
 
-        jButton1.setFont(new java.awt.Font("Ubuntu", 1, 18)); // NOI18N
-        jButton1.setText("Cifrar");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        CipherButton.setFont(new java.awt.Font("Ubuntu", 1, 18)); // NOI18N
+        CipherButton.setText("Cifrar");
+        CipherButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                CipherButtonActionPerformed(evt);
             }
         });
 
-        jButton2.setFont(new java.awt.Font("Ubuntu", 1, 18)); // NOI18N
-        jButton2.setText("Firmar");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        SignButton.setFont(new java.awt.Font("Ubuntu", 1, 18)); // NOI18N
+        SignButton.setText("Firmar");
+        SignButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                SignButtonActionPerformed(evt);
             }
         });
 
-        jButton3.setFont(new java.awt.Font("Ubuntu", 1, 18)); // NOI18N
-        jButton3.setText("Descifrar");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        DecipherButton.setFont(new java.awt.Font("Ubuntu", 1, 18)); // NOI18N
+        DecipherButton.setText("Descifrar");
+        DecipherButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                DecipherButtonActionPerformed(evt);
             }
         });
 
@@ -69,11 +56,11 @@ public class MenuGUI extends javax.swing.JFrame {
         jLabel1.setText("Menu");
         jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
-        jButton4.setFont(new java.awt.Font("Ubuntu", 1, 18)); // NOI18N
-        jButton4.setText("Comprobar firma");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        SignCheckButton.setFont(new java.awt.Font("Ubuntu", 1, 18)); // NOI18N
+        SignCheckButton.setText("Comprobar firma");
+        SignCheckButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                SignCheckButtonActionPerformed(evt);
             }
         });
 
@@ -84,10 +71,10 @@ public class MenuGUI extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(108, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton4, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(SignButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(CipherButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(DecipherButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(SignCheckButton, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(31, 31, 31)))
@@ -99,13 +86,13 @@ public class MenuGUI extends javax.swing.JFrame {
                 .addContainerGap(30, Short.MAX_VALUE)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(CipherButton, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(DecipherButton, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(SignButton, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(SignCheckButton, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(20, 20, 20))
         );
 
@@ -113,7 +100,7 @@ public class MenuGUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     //Encriptar
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void CipherButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CipherButtonActionPerformed
         JFileChooser chooser = new JFileChooser();
         chooser.setDialogTitle("Seleccionar archivo a encriptar");
         int result = chooser.showOpenDialog(null);
@@ -129,7 +116,7 @@ public class MenuGUI extends javax.swing.JFrame {
                 break;
         }
 
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_CipherButtonActionPerformed
 
     private void encrypt(File file) {
         EncryptGUI encryptor = new EncryptGUI();
@@ -147,30 +134,42 @@ public class MenuGUI extends javax.swing.JFrame {
         this.setVisible(false);
     }
 
-    private byte[] signDocument(byte[] aDocument, PrivateKey aPrivateKey) throws GeneralSecurityException {
-        Signature signatureAlgorithm = Signature.getInstance("SHA1withRSA");
-        signatureAlgorithm.initSign(User.privateKey);
-        signatureAlgorithm.update(aDocument);
-        byte[] digitalSignature = signatureAlgorithm.sign();
-        return digitalSignature;
-    }
-
-    //Firmar
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void askForSignFile(File file) {
         JFileChooser chooser = new JFileChooser();
-        chooser.setDialogTitle("Seleccionar archivo a firmar");
+        chooser.setDialogTitle("Seleccionar archivo de firma");
         int result = chooser.showOpenDialog(null);
+
+        File signFile;
+
         switch (result) {
             case JFileChooser.APPROVE_OPTION:
-                File file = chooser.getSelectedFile();
-                byte[] fileBytes = FileTools.getFileBytes(file);
-                 {
-                    try {
-                        byte[] sfb = signDocument(fileBytes, User.privateKey);
-                        saveSignedDocument(sfb);
-                    } catch (GeneralSecurityException ex) {
-                        Logger.getLogger(MenuGUI.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                signFile = chooser.getSelectedFile();
+                askForKeyFile(file, signFile);
+                break;
+            case JFileChooser.CANCEL_OPTION:
+                System.out.println("Cancel");
+                break;
+            case JFileChooser.ERROR_OPTION:
+                System.out.println("Error");
+                break;
+
+        }
+    }
+
+    private void askForKeyFile(File file, File signFile) {
+        JFileChooser chooser = new JFileChooser();
+        chooser.setDialogTitle("Seleccionar archivo de clave");
+        int result = chooser.showOpenDialog(null);
+
+        File keyFile;
+
+        switch (result) {
+            case JFileChooser.APPROVE_OPTION:
+                keyFile = chooser.getSelectedFile();
+                if (SignManager.checkSign(keyFile, signFile, file, this)) {
+                    DialogManager.showDialog(this, "Firma correcta");
+                } else {
+                    DialogManager.showError(this, "Firma Incorrecta");
                 }
                 break;
             case JFileChooser.CANCEL_OPTION:
@@ -179,11 +178,32 @@ public class MenuGUI extends javax.swing.JFrame {
             case JFileChooser.ERROR_OPTION:
                 System.out.println("Error");
                 break;
+
         }
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }
+
+    //Firmar
+    private void SignButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SignButtonActionPerformed
+        JFileChooser chooser = new JFileChooser();
+        chooser.setDialogTitle("Seleccionar archivo a firmar");
+        int result = chooser.showOpenDialog(null);
+        switch (result) {
+            case JFileChooser.APPROVE_OPTION:
+                File file = chooser.getSelectedFile();
+                SignManager.sign(file);
+                DialogManager.showDialog(this, "Documento firmado");
+                break;
+            case JFileChooser.CANCEL_OPTION:
+                System.out.println("Cancel");
+                break;
+            case JFileChooser.ERROR_OPTION:
+                System.out.println("Error");
+                break;
+        }
+    }//GEN-LAST:event_SignButtonActionPerformed
 
     //Desencriptar
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void DecipherButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DecipherButtonActionPerformed
         JFileChooser chooser = new JFileChooser();
         chooser.setDialogTitle("Seleccionar archivo a desencriptar");
         int result = chooser.showOpenDialog(null);
@@ -193,7 +213,7 @@ public class MenuGUI extends javax.swing.JFrame {
                 if (file.getName().contains(".cip")) {
                     decrypt(chooser.getSelectedFile());
                 } else {
-                    ErrorDialog.showError(this, "Archivo no válido");
+                    DialogManager.showError(this, "Archivo no válido");
                 }
                 break;
             case JFileChooser.CANCEL_OPTION:
@@ -204,58 +224,20 @@ public class MenuGUI extends javax.swing.JFrame {
                 break;
 
         }
-    }//GEN-LAST:event_jButton3ActionPerformed
-
-    private void saveSignedDocument(byte[] bytes) {
-        JFileChooser chooser = new JFileChooser();
-        chooser.setDialogTitle("Guardar");
-        int result = chooser.showSaveDialog(null);
-        switch (result) {
-            case JFileChooser.APPROVE_OPTION:
-                FileOutputStream fos;
-                try {
-                    fos = new FileOutputStream(chooser.getSelectedFile().getAbsolutePath());
-                    fos.write(bytes);
-                    fos.close();
-                    System.out.println("FINISHED");
-
-                    JOptionPane.showMessageDialog(this,
-                            "Operación finalizada",
-                            "Firmar",
-                            JOptionPane.INFORMATION_MESSAGE);
-
-                } catch (HeadlessException | IOException e) {
-
-                }
-                break;
-            case JFileChooser.CANCEL_OPTION:
-                System.out.println("Cancel or the close-dialog icon was clicked");
-                break;
-            case JFileChooser.ERROR_OPTION:
-                System.out.println("Error");
-                break;
-        }
-    }
+    }//GEN-LAST:event_DecipherButtonActionPerformed
 
     //Comprobar firma
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void SignCheckButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SignCheckButtonActionPerformed
         JFileChooser chooser = new JFileChooser();
         chooser.setDialogTitle("Seleccionar archivo a comprobar");
         int result = chooser.showOpenDialog(null);
+
+        File file;
+
         switch (result) {
             case JFileChooser.APPROVE_OPTION:
-                File file = chooser.getSelectedFile();
-                try {
-                    Signature signatureAlgorithm = Signature.getInstance("SHA1withRSA");
-                    signatureAlgorithm.initVerify(User.publicKey);
-                    signatureAlgorithm.update(FileTools.getFileBytes(file));
-                    
-                    System.out.println("Esto fue firmado por "+User.ci);
-                    
-                } catch (InvalidKeyException | NoSuchAlgorithmException | SignatureException e) {
-                    ErrorDialog.showError(this, "Error al verificar firma");
-                    e.printStackTrace();
-                }                
+                file = chooser.getSelectedFile();
+                askForSignFile(file);
                 break;
             case JFileChooser.CANCEL_OPTION:
                 System.out.println("Cancel");
@@ -265,7 +247,7 @@ public class MenuGUI extends javax.swing.JFrame {
                 break;
 
         }
-    }//GEN-LAST:event_jButton4ActionPerformed
+    }//GEN-LAST:event_SignCheckButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -303,10 +285,10 @@ public class MenuGUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
+    private javax.swing.JButton CipherButton;
+    private javax.swing.JButton DecipherButton;
+    private javax.swing.JButton SignButton;
+    private javax.swing.JButton SignCheckButton;
     private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 }

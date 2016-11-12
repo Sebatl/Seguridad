@@ -157,7 +157,7 @@ public class EncryptGUI extends javax.swing.JFrame {
                 }
             }
         } else {
-            ErrorDialog.showError(this, "La contraseña debe tener por lo menos 8 caracteres");
+            DialogManager.showError(this, "La contraseña debe tener por lo menos 8 caracteres");
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 

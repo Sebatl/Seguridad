@@ -89,7 +89,7 @@ public class LoginGUI extends javax.swing.JFrame {
                 menu.setVisible(true);
                 this.setVisible(false);
             } else {
-                ErrorDialog.showError(this, "Credenciales inválidas");
+                DialogManager.showError(this, "Credenciales inválidas");
             }
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(LoginGUI.class.getName()).log(Level.SEVERE, null, ex);
