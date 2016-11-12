@@ -23,8 +23,6 @@ public class ID_Asker extends javax.swing.JFrame {
     }
 
     public void ready() {
-
-        //User.ci = "46917176";
         if (UserChecker.isRegistered(User.ci)) {
             login();
         } else {

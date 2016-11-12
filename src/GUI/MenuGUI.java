@@ -5,8 +5,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.Signature;
+import java.security.SignatureException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
@@ -242,7 +245,17 @@ public class MenuGUI extends javax.swing.JFrame {
         switch (result) {
             case JFileChooser.APPROVE_OPTION:
                 File file = chooser.getSelectedFile();
-
+                try {
+                    Signature signatureAlgorithm = Signature.getInstance("SHA1withRSA");
+                    signatureAlgorithm.initVerify(User.publicKey);
+                    signatureAlgorithm.update(FileTools.getFileBytes(file));
+                    
+                    System.out.println("Esto fue firmado por "+User.ci);
+                    
+                } catch (InvalidKeyException | NoSuchAlgorithmException | SignatureException e) {
+                    ErrorDialog.showError(this, "Error al verificar firma");
+                    e.printStackTrace();
+                }                
                 break;
             case JFileChooser.CANCEL_OPTION:
                 System.out.println("Cancel");
