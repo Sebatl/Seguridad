@@ -11,6 +11,7 @@ import reader.ReadThread;
 
 public class ID_Asker extends javax.swing.JFrame {
 
+    boolean TESTING = true;
     /**
      * Creates new form ID_Asker
      */
@@ -73,9 +74,15 @@ public class ID_Asker extends javax.swing.JFrame {
     }
 
     private void login() {
-        LoginGUI login = new LoginGUI();
-        login.setVisible(true);
-        this.setVisible(false);
+        if (TESTING){ //skip login
+            MenuGUI menu = new MenuGUI();
+            menu.setVisible(true);
+            this.setVisible(false);
+        } else {
+            LoginGUI login = new LoginGUI();
+            login.setVisible(true);
+            this.setVisible(false);
+        }
     }
 
     /**
