@@ -2,10 +2,11 @@ package GUI;
 
 import java.io.File;
 import javax.swing.JFileChooser;
+import main.FileTools;
 import signer.SignManager;
 
 public class MenuGUI extends javax.swing.JFrame {
-
+    
     public MenuGUI() {
         initComponents();
     }
@@ -26,7 +27,7 @@ public class MenuGUI extends javax.swing.JFrame {
         SignCheckButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Menu");
+        setTitle("Menú");
 
         CipherButton.setFont(new java.awt.Font("Ubuntu", 1, 18)); // NOI18N
         CipherButton.setText("Cifrar");
@@ -53,7 +54,7 @@ public class MenuGUI extends javax.swing.JFrame {
         });
 
         jLabel1.setFont(new java.awt.Font("Ubuntu", 1, 36)); // NOI18N
-        jLabel1.setText("Menu");
+        jLabel1.setText("Menú");
         jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
         SignCheckButton.setFont(new java.awt.Font("Ubuntu", 1, 18)); // NOI18N
@@ -117,7 +118,7 @@ public class MenuGUI extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_CipherButtonActionPerformed
-
+    
     private void encrypt(File file) {
         EncryptGUI encryptor = new EncryptGUI();
         encryptor.setFile(file);
@@ -125,7 +126,7 @@ public class MenuGUI extends javax.swing.JFrame {
         encryptor.setVisible(true);
         this.setVisible(false);
     }
-
+    
     private void decrypt(File file) {
         DecryptGUI decryptor = new DecryptGUI();
         decryptor.setFile(file);
@@ -133,43 +134,22 @@ public class MenuGUI extends javax.swing.JFrame {
         decryptor.setVisible(true);
         this.setVisible(false);
     }
-
+    
     private void askForSignFile(File file) {
         JFileChooser chooser = new JFileChooser();
         chooser.setDialogTitle("Seleccionar archivo de firma");
         int result = chooser.showOpenDialog(null);
-
+        
         File signFile;
-
+        
         switch (result) {
             case JFileChooser.APPROVE_OPTION:
                 signFile = chooser.getSelectedFile();
-                askForKeyFile(file, signFile);
-                break;
-            case JFileChooser.CANCEL_OPTION:
-                System.out.println("Cancel");
-                break;
-            case JFileChooser.ERROR_OPTION:
-                System.out.println("Error");
-                break;
-
-        }
-    }
-
-    private void askForKeyFile(File file, File signFile) {
-        JFileChooser chooser = new JFileChooser();
-        chooser.setDialogTitle("Seleccionar archivo de clave");
-        int result = chooser.showOpenDialog(null);
-
-        File keyFile;
-
-        switch (result) {
-            case JFileChooser.APPROVE_OPTION:
-                keyFile = chooser.getSelectedFile();
-                if (SignManager.checkSign(keyFile, signFile, file, this)) {
-                    DialogManager.showDialog(this, "Firma correcta");
+                if (FileTools.getExtension(signFile).equals(".sig")) {
+                    askForKeyFile(file, signFile);
                 } else {
-                    DialogManager.showError(this, "Firma Incorrecta");
+                    DialogManager.showError(this, "Archivo de firma no válido");
+                    askForSignFile(file);
                 }
                 break;
             case JFileChooser.CANCEL_OPTION:
@@ -178,7 +158,39 @@ public class MenuGUI extends javax.swing.JFrame {
             case JFileChooser.ERROR_OPTION:
                 System.out.println("Error");
                 break;
-
+            
+        }
+    }
+    
+    private void askForKeyFile(File file, File signFile) {
+        JFileChooser chooser = new JFileChooser();
+        chooser.setDialogTitle("Seleccionar archivo de clave");
+        int result = chooser.showOpenDialog(null);
+        
+        File keyFile;
+        
+        switch (result) {
+            case JFileChooser.APPROVE_OPTION:
+                keyFile = chooser.getSelectedFile();
+                if (FileTools.getExtension(keyFile).equals(".pk")) {
+                    if (SignManager.checkSign(keyFile, signFile, file, this)) {
+                        DialogManager.showDialog(this, "Firma correcta");
+                    } else {
+                        DialogManager.showError(this, "Firma Incorrecta");
+                    }
+                    
+                } else {
+                    DialogManager.showError(this, "Archivo de clave inválido");
+                    askForKeyFile(file, signFile);
+                }
+                break;
+            case JFileChooser.CANCEL_OPTION:
+                System.out.println("Cancel");
+                break;
+            case JFileChooser.ERROR_OPTION:
+                System.out.println("Error");
+                break;
+            
         }
     }
 
@@ -222,7 +234,7 @@ public class MenuGUI extends javax.swing.JFrame {
             case JFileChooser.ERROR_OPTION:
                 System.out.println("Error");
                 break;
-
+            
         }
     }//GEN-LAST:event_DecipherButtonActionPerformed
 
@@ -231,9 +243,9 @@ public class MenuGUI extends javax.swing.JFrame {
         JFileChooser chooser = new JFileChooser();
         chooser.setDialogTitle("Seleccionar archivo a comprobar");
         int result = chooser.showOpenDialog(null);
-
+        
         File file;
-
+        
         switch (result) {
             case JFileChooser.APPROVE_OPTION:
                 file = chooser.getSelectedFile();
@@ -245,44 +257,9 @@ public class MenuGUI extends javax.swing.JFrame {
             case JFileChooser.ERROR_OPTION:
                 System.out.println("Error");
                 break;
-
+            
         }
     }//GEN-LAST:event_SignCheckButtonActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MenuGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MenuGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MenuGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MenuGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new MenuGUI().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton CipherButton;

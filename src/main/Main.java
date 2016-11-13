@@ -7,10 +7,6 @@ package main;
 
 import GUI.ID_Asker;
 
-/**
- *
- * @author Seba
- */
 public class Main {
 
     public static void main(String args[]) {

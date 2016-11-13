@@ -119,84 +119,46 @@ public class DecryptGUI extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         String password = String.valueOf(cipherPassword.getPassword());
-        if (password.length() >= 8) {
-            byte[] decFile = Decryptor.decrypt(file, password);
-            if (decFile != null) {
 
-                JFileChooser chooser = new JFileChooser();
-                chooser.setDialogTitle("Guardar");
-                int result = chooser.showSaveDialog(null);
-                switch (result) {
-                    case JFileChooser.APPROVE_OPTION:
-                        String extension = FileTools.getExtension(file).replace(".cip", "");
-                        String filename = chooser.getSelectedFile().getAbsolutePath() + extension;
-                        FileOutputStream fos;
-                        try {
-                            fos = new FileOutputStream(filename);
-                            fos.write(decFile);
-                            fos.close();
-                            System.out.println("FINISHED");
+        byte[] decFile = Decryptor.decrypt(file, password);
+        if (decFile != null) {
 
-                            JOptionPane.showMessageDialog(this,
-                                    "Operación finalizada",
-                                    "Descifrar",
-                                    JOptionPane.INFORMATION_MESSAGE);
-                            menu.setVisible(true);
-                            this.setVisible(false);
-                        } catch (HeadlessException | IOException e) {
+            JFileChooser chooser = new JFileChooser();
+            chooser.setDialogTitle("Guardar");
+            int result = chooser.showSaveDialog(null);
+            switch (result) {
+                case JFileChooser.APPROVE_OPTION:
+                    String extension = FileTools.getExtension(file).replace(".cip", "");
+                    String filename = chooser.getSelectedFile().getAbsolutePath() + extension;
+                    FileOutputStream fos;
+                    try {
+                        fos = new FileOutputStream(filename);
+                        fos.write(decFile);
+                        fos.close();
+                        System.out.println("FINISHED");
 
-                        }
-                        break;
-                    case JFileChooser.CANCEL_OPTION:
-                        System.out.println("Cancel or the close-dialog icon was clicked");
-                        break;
-                    case JFileChooser.ERROR_OPTION:
-                        System.out.println("Error");
-                        break;
-                }
-            }else{
-                DialogManager.showError(this,"La contraseña es incorrecta");
+                        JOptionPane.showMessageDialog(this,
+                                "Operación finalizada",
+                                "Descifrar",
+                                JOptionPane.INFORMATION_MESSAGE);
+                        menu.setVisible(true);
+                        this.setVisible(false);
+                    } catch (HeadlessException | IOException e) {
+
+                    }
+                    break;
+                case JFileChooser.CANCEL_OPTION:
+                    System.out.println("Cancel or the close-dialog icon was clicked");
+                    break;
+                case JFileChooser.ERROR_OPTION:
+                    System.out.println("Error");
+                    break;
             }
         } else {
-            DialogManager.showError(this,"La contraseña debe tener por lo menos 8 caracteres");
+            DialogManager.showError(this, "La contraseña es incorrecta");
         }
+
     }//GEN-LAST:event_jButton1ActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(DecryptGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(DecryptGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(DecryptGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(DecryptGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new DecryptGUI().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField Filename;

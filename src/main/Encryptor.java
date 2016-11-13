@@ -1,8 +1,6 @@
 package main;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
@@ -20,10 +18,7 @@ import javax.crypto.spec.DESKeySpec;
 public class Encryptor {
 
     public static byte[] encrypt(File file, String password) {
-        KeyGenerator keygenerator;
         try {
-            // Create Key
-            //String password = "0000000000000000000000000000000000000000";
             byte key[] = password.getBytes();
             DESKeySpec desKeySpec = new DESKeySpec(key);
             SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
@@ -35,7 +30,6 @@ public class Encryptor {
 
             cipher = Cipher.getInstance("DES/ECB/PKCS5Padding");
 
-            // Initialize the cipher for encryption
             cipher.init(Cipher.ENCRYPT_MODE, secretKey);
 
             byte[] fileEncrypted = cipher.doFinal(bytes);
@@ -46,6 +40,5 @@ public class Encryptor {
             Logger.getLogger(Encryptor.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
-
     }
 }

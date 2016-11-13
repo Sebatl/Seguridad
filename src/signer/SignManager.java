@@ -12,7 +12,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.InvalidKeyException;
-import java.security.Key;
 import java.security.KeyFactory;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
@@ -22,7 +21,6 @@ import java.security.PublicKey;
 import java.security.Signature;
 import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
-import java.security.spec.RSAPublicKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -87,7 +85,6 @@ public class SignManager {
         try {
             //Cargo la clave
             PublicKey publicKey = loadPublicKey(key);
-
             if (publicKey != null) {
                 byte[] signatureBytes = loadSignature(signFile);
                 if (signatureBytes != null) {
@@ -98,7 +95,7 @@ public class SignManager {
 
                     boolean verifies = signature.verify(signatureBytes);
 
-                    System.out.println("signature verifies: " + verifies);
+                    //System.out.println("signature verifies: " + verifies);
 
                     return verifies;
                 } else {
@@ -123,7 +120,7 @@ public class SignManager {
             keyfis.close();
 
             PublicKey key = createPublicKey(encKey);
-            
+
             return key;
 
         } catch (IOException ex) {
@@ -132,17 +129,17 @@ public class SignManager {
         }
         return null;
     }
-    
+
     public static PublicKey createPublicKey(byte[] encodedPublicKey) {
         try {
-            X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(encodedPublicKey);           
-            String algorithm = "RSA";            
+            X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(encodedPublicKey);
+            String algorithm = "RSA";
             KeyPairGenerator kpgen = KeyPairGenerator.getInstance(algorithm);
             Provider provider = kpgen.getProvider();
-            
-            X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(User.cert.getPublicKey().getEncoded());
+
+            X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(encodedPublicKey);
             KeyFactory keyFactory = KeyFactory.getInstance(algorithm, provider.getName());
-            
+
             PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
 
             return publicKey;
