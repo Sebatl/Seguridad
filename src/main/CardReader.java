@@ -19,7 +19,7 @@ public class CardReader {
         try {
             TerminalFactory factory = TerminalFactory.getDefault();
             List<CardTerminal> terminals = factory.terminals().list();
-            //System.out.println("Lectores: " + terminals);
+            //System.out.println("Lectores: " +     terminals);
 
             terminal = terminals.get(0);
         } catch (CardException e) {
@@ -36,7 +36,7 @@ public class CardReader {
                 System.out.println("Tarjeta: " + card);
 
                 JPasswordField pf = new JPasswordField();
-              
+                pf.addAncestorListener( new RequestFocusListener() );
                 int okCxl = JOptionPane.showConfirmDialog(null, pf, "Ingresa el PIN", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
                 if (okCxl == JOptionPane.OK_OPTION) {
                     char[] pin = pf.getPassword();

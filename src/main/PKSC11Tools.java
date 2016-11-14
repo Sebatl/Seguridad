@@ -58,7 +58,7 @@ public class PKSC11Tools {
             return true;
         } catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException | CertificateException | IOException ex) {
             Logger.getLogger(PKSC11Tools.class.getName()).log(Level.SEVERE, null, ex);
-            return true;
+            return false;
         }
     }
 
