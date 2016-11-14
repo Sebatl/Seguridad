@@ -5,18 +5,25 @@
  */
 package signer;
 
-import java.io.File;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 public class SignedObject implements Serializable {
 
-    File document;
-    byte[] docSign, sourceSign, key;
+    byte[] document, docSign, sourceSign, key;
     LocalDateTime date;
+    String fileName;
 
     public SignedObject() {
         date = LocalDateTime.now();
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 
     public LocalDateTime getDate() {
@@ -40,11 +47,11 @@ public class SignedObject implements Serializable {
     }
     String source;
 
-    public File getDocument() {
+    public byte[] getDocument() {
         return document;
     }
 
-    public void setDocument(File document) {
+    public void setDocument(byte[] document) {
         this.document = document;
     }
 

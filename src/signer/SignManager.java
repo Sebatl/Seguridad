@@ -34,7 +34,7 @@ import main.User;
  * @author Seba
  */
 public class SignManager {
-
+    
     public static void sign(File file) {
         byte[] fileBytes = FileTools.getFileBytes(file);
         {
@@ -49,14 +49,14 @@ public class SignManager {
                 //Firmo la cedula
                 signatureAlgorithm.update(User.ci.getBytes());
                 byte[] sourceSig = signatureAlgorithm.sign();
-
+                
                 saveSign(file, docSig, sourceSig);
             } catch (NoSuchAlgorithmException | SignatureException | InvalidKeyException ex) {
                 Logger.getLogger(SignManager.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
-
+    
     private static void saveSign(File file, byte[] docSign, byte[] sourceSign) {
         JFileChooser chooser = new JFileChooser();
         chooser.setDialogTitle("Guardar");
@@ -64,7 +64,8 @@ public class SignManager {
         switch (result) {
             case JFileChooser.APPROVE_OPTION:
                 SignedObject sO = new SignedObject();
-                sO.setDocument(file);
+                sO.setDocument(FileTools.getFileBytes(file));
+                sO.setFileName(file.getName());
                 sO.setDocSign(docSign);
                 sO.setSourceSign(sourceSign);
                 sO.setKey(User.cert.getPublicKey().getEncoded());
@@ -77,7 +78,7 @@ public class SignManager {
                     oos.writeObject(sO);
                     oos.close();
                     System.out.println("Done");
-
+                    
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
@@ -142,7 +143,7 @@ public class SignManager {
             if (publicKey != null) {
                 try {
                     Signature signature = Signature.getInstance("SHA1withRSA");
-                    byte[] fileBytes = FileTools.getFileBytes(sO.getDocument());
+                    byte[] fileBytes = sO.getDocument();
                     signature.initVerify(publicKey);
                     signature.update(fileBytes);
                     //Compruebo la firma del documento
@@ -156,7 +157,7 @@ public class SignManager {
                     } else {
                         return null;
                     }
-
+                    
                 } catch (InvalidKeyException | SignatureException | NoSuchAlgorithmException ex) {
                     Logger.getLogger(SignManager.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -166,7 +167,7 @@ public class SignManager {
         }
         return null;
     }
-
+    
     private static SignedObject recoverSign(File file) {
         FileInputStream fin = null;
         try {
@@ -180,7 +181,7 @@ public class SignManager {
             } catch (IOException | ClassNotFoundException ex) {
                 Logger.getLogger(SignManager.class.getName()).log(Level.SEVERE, null, ex);
             }
-
+            
         } catch (FileNotFoundException ex) {
             Logger.getLogger(SignManager.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
@@ -192,19 +193,19 @@ public class SignManager {
         }
         return null;
     }
-
+    
     public static PublicKey createPublicKey(byte[] encodedPublicKey) {
         try {
             X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(encodedPublicKey);
             String algorithm = "RSA";
             KeyPairGenerator kpgen = KeyPairGenerator.getInstance(algorithm);
             Provider provider = kpgen.getProvider();
-
+            
             X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(encodedPublicKey);
             KeyFactory keyFactory = KeyFactory.getInstance(algorithm, provider.getName());
-
+            
             PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
-
+            
             return publicKey;
         } catch (NoSuchAlgorithmException | NoSuchProviderException | InvalidKeySpecException ex) {
             Logger.getLogger(SignManager.class

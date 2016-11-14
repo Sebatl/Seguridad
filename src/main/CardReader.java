@@ -36,8 +36,8 @@ public class CardReader {
                 System.out.println("Tarjeta: " + card);
 
                 JPasswordField pf = new JPasswordField();
+              
                 int okCxl = JOptionPane.showConfirmDialog(null, pf, "Ingresa el PIN", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-
                 if (okCxl == JOptionPane.OK_OPTION) {
                     char[] pin = pf.getPassword();
 
