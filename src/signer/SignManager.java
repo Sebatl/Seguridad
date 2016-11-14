@@ -5,12 +5,13 @@
  */
 package signer;
 
-import java.awt.HeadlessException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.KeyPairGenerator;
@@ -25,7 +26,6 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import main.FileTools;
 import main.User;
 
@@ -41,22 +41,48 @@ public class SignManager {
             try {
                 Signature signatureAlgorithm = Signature.getInstance("SHA1withRSA");
                 signatureAlgorithm.initSign(User.privateKey);
+
+                //Firmo el documento
                 signatureAlgorithm.update(fileBytes);
-                byte[] digitalSignature = signatureAlgorithm.sign();
-                saveSign(digitalSignature);
+                byte[] docSig = signatureAlgorithm.sign();
+
+                //Firmo la cedula
+                signatureAlgorithm.update(User.ci.getBytes());
+                byte[] sourceSig = signatureAlgorithm.sign();
+
+                saveSign(file, docSig, sourceSig);
             } catch (NoSuchAlgorithmException | SignatureException | InvalidKeyException ex) {
                 Logger.getLogger(SignManager.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
 
-    private static void saveSign(byte[] bytes) {
+    private static void saveSign(File file, byte[] docSign, byte[] sourceSign) {
         JFileChooser chooser = new JFileChooser();
         chooser.setDialogTitle("Guardar");
         int result = chooser.showSaveDialog(null);
         switch (result) {
             case JFileChooser.APPROVE_OPTION:
-                FileOutputStream fos;
+                SignedObject sO = new SignedObject();
+                sO.setDocument(file);
+                sO.setDocSign(docSign);
+                sO.setSourceSign(sourceSign);
+                sO.setKey(User.cert.getPublicKey().getEncoded());
+                sO.setSource(User.ci);
+                //User.cert.getIssuerX500Principal().getName();
+
+                try {
+                    FileOutputStream fout = new FileOutputStream(chooser.getSelectedFile().getAbsolutePath() + ".sgo");
+                    ObjectOutputStream oos = new ObjectOutputStream(fout);
+                    oos.writeObject(sO);
+                    oos.close();
+                    System.out.println("Done");
+
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+
+                /*FileOutputStream fos;
                 try {
                     //Firma
                     fos = new FileOutputStream(chooser.getSelectedFile().getAbsolutePath() + ".sign");
@@ -70,7 +96,7 @@ public class SignManager {
 
                 } catch (HeadlessException | IOException e) {
 
-                }
+                }*/
                 break;
             case JFileChooser.CANCEL_OPTION:
                 System.out.println("Cancel or the close-dialog icon was clicked");
@@ -81,7 +107,7 @@ public class SignManager {
         }
     }
 
-    public static boolean checkSign(File key, File signFile, File file, JFrame frame) {
+    /*public static boolean checkSign(File key, File signFile, File file) {
         try {
             //Cargo la clave
             PublicKey publicKey = loadPublicKey(key);
@@ -96,7 +122,6 @@ public class SignManager {
                     boolean verifies = signature.verify(signatureBytes);
 
                     //System.out.println("signature verifies: " + verifies);
-
                     return verifies;
                 } else {
                     return false;
@@ -109,23 +134,61 @@ public class SignManager {
             Logger.getLogger(SignManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
+    }*/
+    public static SignedObject checkSign(File file) {
+        SignedObject sO = recoverSign(file);
+        if (sO != null) {
+            PublicKey publicKey = createPublicKey(sO.getKey());
+            if (publicKey != null) {
+                try {
+                    Signature signature = Signature.getInstance("SHA1withRSA");
+                    byte[] fileBytes = FileTools.getFileBytes(sO.getDocument());
+                    signature.initVerify(publicKey);
+                    signature.update(fileBytes);
+                    //Compruebo la firma del documento
+                    boolean docVerifies = signature.verify(sO.getDocSign());
+                    if (docVerifies) {
+                        signature.update(sO.getSource().getBytes());
+                        //Compruebo el emisor del documento
+                        if (signature.verify(sO.getSourceSign())) {
+                            return sO;
+                        }
+                    } else {
+                        return null;
+                    }
+
+                } catch (InvalidKeyException | SignatureException | NoSuchAlgorithmException ex) {
+                    Logger.getLogger(SignManager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } else {
+                return null;
+            }
+        }
+        return null;
     }
 
-    private static PublicKey loadPublicKey(File file) {
+    private static SignedObject recoverSign(File file) {
+        FileInputStream fin = null;
         try {
-            FileInputStream keyfis = null;
-            keyfis = new FileInputStream(file);
-            byte[] encKey = new byte[keyfis.available()];
-            keyfis.read(encKey);
-            keyfis.close();
+            SignedObject sO;
+            fin = new FileInputStream(file);
+            ObjectInputStream ois;
+            try {
+                ois = new ObjectInputStream(fin);
+                sO = (SignedObject) ois.readObject();
+                return sO;
+            } catch (IOException | ClassNotFoundException ex) {
+                Logger.getLogger(SignManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
-            PublicKey key = createPublicKey(encKey);
-
-            return key;
-
-        } catch (IOException ex) {
-            Logger.getLogger(SignManager.class
-                    .getName()).log(Level.SEVERE, null, ex);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(SignManager.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                fin.close();
+            } catch (IOException ex) {
+                Logger.getLogger(SignManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return null;
     }
@@ -150,7 +213,7 @@ public class SignManager {
         return null;
     }
 
-    private static byte[] loadSignature(File file) {
+    /*private static byte[] loadSignature(File file) {
         FileInputStream sigfis = null;
         try {
             sigfis = new FileInputStream(file);
@@ -176,6 +239,5 @@ public class SignManager {
             }
         }
         return null;
-    }
-
+    }*/
 }

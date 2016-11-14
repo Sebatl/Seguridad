@@ -4,9 +4,10 @@ import java.io.File;
 import javax.swing.JFileChooser;
 import main.FileTools;
 import signer.SignManager;
+import signer.SignedObject;
 
 public class MenuGUI extends javax.swing.JFrame {
-    
+
     public MenuGUI() {
         initComponents();
     }
@@ -118,7 +119,7 @@ public class MenuGUI extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_CipherButtonActionPerformed
-    
+
     private void encrypt(File file) {
         EncryptGUI encryptor = new EncryptGUI();
         encryptor.setFile(file);
@@ -126,7 +127,7 @@ public class MenuGUI extends javax.swing.JFrame {
         encryptor.setVisible(true);
         this.setVisible(false);
     }
-    
+
     private void decrypt(File file) {
         DecryptGUI decryptor = new DecryptGUI();
         decryptor.setFile(file);
@@ -134,14 +135,14 @@ public class MenuGUI extends javax.swing.JFrame {
         decryptor.setVisible(true);
         this.setVisible(false);
     }
-    
-    private void askForSignFile(File file) {
+
+    /*private void askForSignFile(File file) {
         JFileChooser chooser = new JFileChooser();
         chooser.setDialogTitle("Seleccionar archivo de firma");
         int result = chooser.showOpenDialog(null);
-        
+
         File signFile;
-        
+
         switch (result) {
             case JFileChooser.APPROVE_OPTION:
                 signFile = chooser.getSelectedFile();
@@ -158,11 +159,11 @@ public class MenuGUI extends javax.swing.JFrame {
             case JFileChooser.ERROR_OPTION:
                 System.out.println("Error");
                 break;
-            
+
         }
-    }
-    
-    private void askForKeyFile(File file, File signFile) {
+    }*/
+
+ /*private void askForKeyFile(File file, File signFile) {
         JFileChooser chooser = new JFileChooser();
         chooser.setDialogTitle("Seleccionar archivo de clave");
         int result = chooser.showOpenDialog(null);
@@ -173,7 +174,7 @@ public class MenuGUI extends javax.swing.JFrame {
             case JFileChooser.APPROVE_OPTION:
                 keyFile = chooser.getSelectedFile();
                 if (FileTools.getExtension(keyFile).equals(".pk")) {
-                    if (SignManager.checkSign(keyFile, signFile, file, this)) {
+                    if (SignManager.checkSign(keyFile, signFile, file)) {
                         DialogManager.showDialog(this, "Firma correcta");
                     } else {
                         DialogManager.showError(this, "Firma Incorrecta");
@@ -192,8 +193,7 @@ public class MenuGUI extends javax.swing.JFrame {
                 break;
             
         }
-    }
-
+    }*/
     //Firmar
     private void SignButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SignButtonActionPerformed
         JFileChooser chooser = new JFileChooser();
@@ -218,6 +218,7 @@ public class MenuGUI extends javax.swing.JFrame {
     private void DecipherButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DecipherButtonActionPerformed
         JFileChooser chooser = new JFileChooser();
         chooser.setDialogTitle("Seleccionar archivo a desencriptar");
+        chooser.setFileFilter(FileTools.getCIPFilter());
         int result = chooser.showOpenDialog(null);
         switch (result) {
             case JFileChooser.APPROVE_OPTION:
@@ -234,22 +235,33 @@ public class MenuGUI extends javax.swing.JFrame {
             case JFileChooser.ERROR_OPTION:
                 System.out.println("Error");
                 break;
-            
+
         }
     }//GEN-LAST:event_DecipherButtonActionPerformed
 
     //Comprobar firma
     private void SignCheckButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SignCheckButtonActionPerformed
         JFileChooser chooser = new JFileChooser();
+        chooser.setFileFilter(FileTools.getSGOFilter());
         chooser.setDialogTitle("Seleccionar archivo a comprobar");
         int result = chooser.showOpenDialog(null);
-        
+
         File file;
-        
+
         switch (result) {
             case JFileChooser.APPROVE_OPTION:
                 file = chooser.getSelectedFile();
-                askForSignFile(file);
+                if (FileTools.getExtension(file).equals(".sgo")) {
+                    SignedObject sO = SignManager.checkSign(file);
+                    if (sO != null) {
+                        DialogManager.showError(this, "Firma correcta. Emitida por " + sO.getSource() + " el " + sO.getDate());
+                    } else {
+                        DialogManager.showError(this, "Firma inválida");
+                    }
+                } else {
+                    DialogManager.showError(this, "Archivo inválido");
+                }
+                //askForSignFile(file);
                 break;
             case JFileChooser.CANCEL_OPTION:
                 System.out.println("Cancel");
@@ -257,7 +269,7 @@ public class MenuGUI extends javax.swing.JFrame {
             case JFileChooser.ERROR_OPTION:
                 System.out.println("Error");
                 break;
-            
+
         }
     }//GEN-LAST:event_SignCheckButtonActionPerformed
 

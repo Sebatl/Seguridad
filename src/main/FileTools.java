@@ -8,6 +8,7 @@ package main;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class FileTools {
 
@@ -20,7 +21,7 @@ public class FileTools {
         return "";
     }
 
-     public static byte[] getFileBytes(File file) {
+    public static byte[] getFileBytes(File file) {
         byte[] bFile = new byte[(int) file.length()];
         FileInputStream fileInputStream;
         try {
@@ -36,5 +37,12 @@ public class FileTools {
             return null;
         }
     }
-    
+
+    public static FileNameExtensionFilter getSGOFilter() {
+        return new FileNameExtensionFilter("SGO", "sgo");
+    }
+
+    public static FileNameExtensionFilter getCIPFilter() {
+        return new FileNameExtensionFilter("CIP", "cip");
+    }
 }
