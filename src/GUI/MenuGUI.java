@@ -1,6 +1,11 @@
 package GUI;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
+
 import javax.swing.JFileChooser;
 import main.FileTools;
 import signer.SignManager;
@@ -254,7 +259,7 @@ public class MenuGUI extends javax.swing.JFrame {
                 if (FileTools.getExtension(file).equals(".sgo")) {
                     SignedObject sO = SignManager.checkSign(file);
                     if (sO != null) {
-                        DialogManager.showError(this, "Firma correcta. Emitida por " + sO.getSource() + " el " + sO.getDate());
+                        DialogManager.showDialog(this, "Firma correcta. Emitida por " + formatCI(sO.getSource()) + " el " + formatDate(sO.getDate()));
                     } else {
                         DialogManager.showError(this, "Firma inválida");
                     }
@@ -272,6 +277,27 @@ public class MenuGUI extends javax.swing.JFrame {
 
         }
     }//GEN-LAST:event_SignCheckButtonActionPerformed
+
+    public String formatCI(String ci){
+        String s = "";
+        int len = ci.length();
+        System.out.println(ci);
+        String last_digit = ci.substring(len-1);
+        String last_group = ci.substring(len-4, len-1);
+        String thousand = ci.substring(1, len-4);
+        String million = ci.substring(0,1);
+        System.out.println(last_digit);
+        System.out.println(last_group);
+        System.out.println(thousand);
+        System.out.println(million);
+        return million+"."+thousand+"."+last_group+"-"+last_digit;
+    }
+    
+    private String formatDate(LocalDateTime date) {
+        Date d = Date.from(date.atZone(ZoneId.systemDefault()).toInstant());
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/M/yyyy");
+        return sdf.format(d); 
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton CipherButton;
